@@ -6,7 +6,7 @@ import "./components/GeneralInfo.jsx";
 import GeneralInfo from "./components/GeneralInfo.jsx";
 import EducationalExperience from "./components/EducationalExperience.jsx";
 import PracticalExperience from "./components/PracticalExperience.jsx";
-
+import GeneralInput from "./components/GeneralInput.jsx";
 function App() {
   // A cv maker app
   const [btnDisable, setBtnDisable] = useState(true)
@@ -17,6 +17,14 @@ function App() {
     email: "meecorcll@gmail.com ",
     contactNo: "09221312",
   });
+
+  const handleOnchange = (event) =>{
+    const { name, value } = event.target;
+  setGeneralInfo((prev) => ({
+    ...prev,
+    [name]: value, // Use dynamic key for specific field update
+  }));
+  }
   const [educExperience, setEducExperience] = useState([
     {
       id: crypto.randomUUID(),
@@ -60,6 +68,7 @@ function App() {
     <>
       <div>
         <GeneralInfo info={generalInfo}></GeneralInfo>
+        <GeneralInput value={generalInfo.name} handleOnchange={handleOnchange}> </GeneralInput>
       </div>
       <div>
         {educExperience.map((experience) => (
