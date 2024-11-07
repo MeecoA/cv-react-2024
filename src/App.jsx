@@ -6,7 +6,7 @@ import "./components/GeneralInfo.jsx";
 import GeneralInfo from "./components/GeneralInfo.jsx";
 import EducationalExperience from "./components/EducationalExperience.jsx";
 import PracticalExperience from "./components/PracticalExperience.jsx";
-import GeneralInput from "./components/GeneralInput.jsx";
+import Inputs from "./components/Inputs.jsx";
 function App() {
   // A cv maker app
   const [btnDisable, setBtnDisable] = useState(true)
@@ -22,7 +22,7 @@ function App() {
     const { name, value } = event.target;
   setGeneralInfo((prev) => ({
     ...prev,
-    [name]: value, // Use dynamic key for specific field update
+    [name]: value, 
   }));
   }
   const [educExperience, setEducExperience] = useState([
@@ -68,7 +68,10 @@ function App() {
     <>
       <div>
         <GeneralInfo info={generalInfo}></GeneralInfo>
-        <GeneralInput value={generalInfo.name} handleOnchange={handleOnchange}> </GeneralInput>
+        <Inputs value={generalInfo.name} handleOnchange={handleOnchange} name="name"/> 
+        <Inputs value={generalInfo.address} handleOnchange={handleOnchange} name="address"/> 
+        <Inputs value={generalInfo.email} handleOnchange={handleOnchange} name="email"/> 
+        <Inputs value={generalInfo.contactNo} handleOnchange={handleOnchange} name="contactNo"/> 
       </div>
       <div>
         {educExperience.map((experience) => (
