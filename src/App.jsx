@@ -7,9 +7,11 @@ import GeneralInfo from "./components/GeneralInfo.jsx";
 import EducationalExperience from "./components/EducationalExperience.jsx";
 import PracticalExperience from "./components/PracticalExperience.jsx";
 import Inputs from "./components/Inputs.jsx";
+import Button from "./components/Button.jsx";
+
+
 function App() {
   // A cv maker app
-  const [btnDisable, setBtnDisable] = useState(true)
   const [generalInfo, setGeneralInfo] = useState({
     id: crypto.randomUUID(),
     name: "Meeco",
@@ -18,6 +20,8 @@ function App() {
     contactNo: "09221312",
   });
 
+  const [isEdit, setIsEdit] = useState(false)
+
   const handleOnchange = (event) =>{
     const { name, value } = event.target;
   setGeneralInfo((prev) => ({
@@ -25,6 +29,14 @@ function App() {
     [name]: value, 
   }));
   }
+  const handleEditClick = () =>{
+    setIsEdit(!isEdit)
+  }
+  const handleSaveClick = () =>{
+    setIsEdit(!isEdit)
+  }
+
+
   const [educExperience, setEducExperience] = useState([
     {
       id: crypto.randomUUID(),
@@ -52,14 +64,11 @@ function App() {
       date: "",
     };
     setPractExperience((prevExperience) => [...prevExperience, newExperience]);
-    setBtnDisable(false)
   };
   const deletePractExperience = (id) => {
     if (practExperience.length !== 1){
       const newExperience = practExperience.filter(experience => experience.id !== id)
       setPractExperience(newExperience)
-    }else{
-      setBtnDisable(true)
     }
    
   }
@@ -67,11 +76,20 @@ function App() {
   return (
     <>
       <div>
-        <GeneralInfo info={generalInfo}></GeneralInfo>
+        { !isEdit ? <div>
+          <GeneralInfo info={generalInfo}></GeneralInfo>
+          <Button handleClick={handleEditClick} btnText={"Edit"}></Button>
+        </div>
+         :  
+        <div>
         <Inputs value={generalInfo.name} handleOnchange={handleOnchange} name="name"/> 
         <Inputs value={generalInfo.address} handleOnchange={handleOnchange} name="address"/> 
         <Inputs value={generalInfo.email} handleOnchange={handleOnchange} name="email"/> 
-        <Inputs value={generalInfo.contactNo} handleOnchange={handleOnchange} name="contactNo"/> 
+        <Inputs value={generalInfo.contactNo} handleOnchange={handleOnchange} name="contactNo"/>
+        <Button handleClick={handleSaveClick} btnText={"save"}></Button>
+        </div>
+        } 
+         
       </div>
       <div>
         {educExperience.map((experience) => (
@@ -83,13 +101,15 @@ function App() {
       </div>
       <div>
         {practExperience.map((experience) => (
+          <div key={experience.id}>
           <PracticalExperience
             info={experience}
             key={experience.id}
             addExperience={addPractExperience}
-            deleteExperience={() => deletePractExperience(experience.id)}
-            btnDisable={btnDisable}
           ></PracticalExperience>
+          <Button key={`${experience.id}-add`} btnText={"Add Experience"}  handleClick={addPractExperience}></Button>
+          <Button key={`${experience.id}-delete`} btnText={"Delete"} handleClick={()=>deletePractExperience(experience.id)}></Button>
+          </div>
         ))}
       </div>
     </>
