@@ -32,12 +32,12 @@ function App() {
       position: "data engineer",
       responsibilities: "responsibilities",
       date: "2023-01-01",
+      edit: true,
     },
   ]);
 
   const [editGeneralInfo, setEditGeneralInfo] = useState(false);
   const [editEducExperience, setEditEducExperience] = useState(false);
-  const [editPractExperience, setEditPractExperience] = useState(false);
 
   const handleOnchange = (event, component) => {
     const { name, value } = event.target;
@@ -51,14 +51,18 @@ function App() {
         ...prev,
         [name]: value,
       }));
-    } else if (component === "practExperience") {
-      practExperience.map((experience) => {
-        setPractExperience((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      });
     }
+  };
+
+  const handleOnchangePractExperience = (event, id) => {
+    const { name, value } = event.target;
+    const updatedPractExperience = practExperience.map((experience) => {
+      if (experience.id === id) {
+        return { ...experience, [name]: value };
+      }
+      return experience;
+    });
+    setPractExperience(updatedPractExperience);
   };
 
   const handleEditClick = (component) => {
@@ -70,11 +74,13 @@ function App() {
   };
 
   const handleEditPractExperience = (id) => {
-    practExperience.map((experience) => {
+    const updatedEditExperience = practExperience.map((experience) => {
       if (experience.id === id) {
-        setEditPractExperience(!editPractExperience);
+        return { ...experience, edit: !experience.edit };
       }
+      return experience;
     });
+    setPractExperience(updatedEditExperience);
   };
 
   const addPractExperience = () => {
@@ -189,21 +195,16 @@ function App() {
 
       <div>
         {practExperience.map((experience) =>
-          editPractExperience ? (
+          experience.edit ? (
             <div key={experience.id}>
               <PracticalExperience
                 info={experience}
                 addExperience={addPractExperience}
               ></PracticalExperience>
               <Button
-                key={`${experience.id}-edit`}
+                key={experience.id}
                 btnText={"Edit"}
                 handleClick={() => handleEditPractExperience(experience.id)}
-              ></Button>
-              <Button
-                key={`${experience.id}-delete`}
-                btnText={"Delete"}
-                handleClick={() => deletePractExperience(experience.id)}
               ></Button>
             </div>
           ) : (
@@ -212,13 +213,42 @@ function App() {
                 name="companyName"
                 value={experience.companyName}
                 handleOnchange={(event) => {
-                  handleOnchange(event, "practExperience");
+                  handleOnchangePractExperience(event, experience.id);
+                }}
+              />
+              <Inputs
+                type="text"
+                name="position"
+                value={experience.position}
+                handleOnchange={(event) => {
+                  handleOnchangePractExperience(event, experience.id);
+                }}
+              />
+              <Inputs
+                type="text"
+                name="responsibilities"
+                value={experience.responsibilities}
+                handleOnchange={(event) => {
+                  handleOnchangePractExperience(event, experience.id);
+                }}
+              />
+              <Inputs
+                type="date"
+                name="date"
+                value={experience.date}
+                handleOnchange={(event) => {
+                  handleOnchangePractExperience(event, experience.id);
                 }}
               />
               <Button
-                key={`${experience.id}-edit`}
+                key={experience.id}
                 btnText={"Save"}
                 handleClick={() => handleEditPractExperience(experience.id)}
+              ></Button>
+              <Button
+                key={`${experience.id}-delete`}
+                btnText={"Delete"}
+                handleClick={() => deletePractExperience(experience.id)}
               ></Button>
             </div>
           )
