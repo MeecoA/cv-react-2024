@@ -10,6 +10,8 @@ import Button from "./components/Button.jsx";
 
 function App() {
   // A cv maker app
+
+  // states
   const [generalInfo, setGeneralInfo] = useState({
     id: crypto.randomUUID(),
     name: "Meeco",
@@ -32,13 +34,16 @@ function App() {
       position: "data engineer",
       responsibilities: "responsibilities",
       date: "2023-01-01",
-      edit: true,
+      edit: false,
     },
   ]);
-
   const [editGeneralInfo, setEditGeneralInfo] = useState(false);
   const [editEducExperience, setEditEducExperience] = useState(false);
+  const bgColor = "bg-green-500";
 
+  //functions
+
+  // single onchange to two components with similar onchange behaviour
   const handleOnchange = (event, component) => {
     const { name, value } = event.target;
     if (component === "generalInfo") {
@@ -54,6 +59,7 @@ function App() {
     }
   };
 
+  // separate onchange for list of inputs
   const handleOnchangePractExperience = (event, id) => {
     const { name, value } = event.target;
     const updatedPractExperience = practExperience.map((experience) => {
@@ -65,6 +71,7 @@ function App() {
     setPractExperience(updatedPractExperience);
   };
 
+  // single edit function for two components with similar behaviour
   const handleEditClick = (component) => {
     if (component === "generalInfo") {
       setEditGeneralInfo(!editGeneralInfo);
@@ -73,6 +80,7 @@ function App() {
     }
   };
 
+  //separate function for handling edit property of the object
   const handleEditPractExperience = (id) => {
     const updatedEditExperience = practExperience.map((experience) => {
       if (experience.id === id) {
@@ -116,33 +124,40 @@ function App() {
           </div>
         ) : (
           <div>
+            <p>General Information</p>
             <Inputs
               value={generalInfo.name}
               handleOnchange={(event) => handleOnchange(event, "generalInfo")}
               name="name"
               type="text"
+              placeholder="Enter your name"
             />
             <Inputs
               value={generalInfo.address}
               handleOnchange={(event) => handleOnchange(event, "generalInfo")}
               name="address"
               type="text"
+              placeholder="Enter your addess"
             />
             <Inputs
               value={generalInfo.email}
               handleOnchange={(event) => handleOnchange(event, "generalInfo")}
               name="email"
-              type="text"
+              type="email"
+              placeholder="Enter your email"
             />
             <Inputs
               value={generalInfo.contactNo}
               handleOnchange={(event) => handleOnchange(event, "generalInfo")}
               name="contactNo"
               type="text"
+              placeholder="Enter Contact Number"
             />
             <Button
               handleClick={() => handleEditClick("generalInfo")}
               btnText={"Save"}
+              bgColor={bgColor}
+              hoverBgColor={"hover:bg-green-400"}
             ></Button>
           </div>
         )}
@@ -161,6 +176,7 @@ function App() {
           </div>
         ) : (
           <div key={educExperience.id}>
+            <p>Educational Experience</p>
             <Inputs
               value={educExperience.schoolName}
               handleOnchange={(event) =>
@@ -188,12 +204,15 @@ function App() {
             <Button
               handleClick={() => handleEditClick("educExperience")}
               btnText={"Save"}
+              bgColor={bgColor}
+              hoverBgColor={"hover:bg-green-400"}
             ></Button>
           </div>
         )}
       </div>
 
       <div>
+        <p>Practical Experience</p>
         {practExperience.map((experience) =>
           experience.edit ? (
             <div key={experience.id}>
@@ -244,6 +263,8 @@ function App() {
                 key={experience.id}
                 btnText={"Save"}
                 handleClick={() => handleEditPractExperience(experience.id)}
+                bgColor={bgColor}
+                hoverBgColor={"hover:bg-green-400"}
               ></Button>
               <Button
                 key={`${experience.id}-delete`}
